@@ -27,5 +27,7 @@ pp.check_missing_vals(data_movie)
 data_movie = pp.impute(data_movie)
 pp.check_missing_vals(data_movie)
 
-# describe data
-print(data_movie.describe())
+# one hot encoding
+data_movie = pp.one_hot_encoding(data_movie)
+print(data_movie.head(3))
+

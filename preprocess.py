@@ -18,7 +18,7 @@ def check_missing_vals(data):
 
 def impute(data):
     num_data = data[data.columns[0:14]]
-    im_num = SimpleImputer(missing_values=np.nan, strategy="mean", copy=False)
+    im_num = SimpleImputer(missing_values=np.nan, strategy="median", copy=False)
     im_num.fit_transform(num_data)
 
     cat_data = data[data.columns[14:]]
@@ -30,9 +30,27 @@ def impute(data):
 
 # encode labels
 def encode_labels(data):
+    data_cp = data.copy()
+    cols = data_cp.columns
     encode_quality = LabelEncoder()
-    data['quality'] = encode_quality.fit_transform(data['quality'])
-    return data
+
+    for i in range(14, data_cp.shape[1]):
+        data_cp[cols[i]] = encode_quality.fit_transform(data_cp[cols[i]])
+
+    return data_cp
+
+
+# one hot encoding
+def one_hot_encoding(data):
+    data_cp = data.copy()
+    cols = data_cp.columns
+
+    for i in range(14, data_cp.shape[1]):
+        df = pd.get_dummies(data=data[cols[i]], prefix=cols[i], drop_first=True)
+        data_cp = data_cp.drop(cols[i], axis=1)
+        data_cp = pd.concat([data_cp, df], axis=1)
+
+    return data_cp
 
 
 # feature scaling
