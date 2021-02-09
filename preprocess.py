@@ -59,5 +59,19 @@ def scale_features(x):
     x = scaler.fit_transform(x)
     return x
 
+def preprocess_data(data_movie):
 
+    print(data_movie.info())
+
+    # check missing vals
+    # data contains missing vals
+    check_missing_vals(data_movie)
+
+    # impute data
+    data_movie = impute(data_movie)
+    check_missing_vals(data_movie)
+
+    # one hot encoding
+    data_movie = pp.one_hot_encoding(data_movie)
+    print(data_movie.head(3))
 
