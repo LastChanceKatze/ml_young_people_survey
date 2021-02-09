@@ -1,5 +1,6 @@
 import pandas as pd
 import preprocess as pp
+import descriptive_statistics as ds
 
 desired_width = 500
 pd.set_option('display.width', desired_width)
@@ -27,7 +28,11 @@ pp.check_missing_vals(data_movie)
 data_movie = pp.impute(data_movie)
 pp.check_missing_vals(data_movie)
 
+data_movie = data_movie.drop(columns=["Number of siblings", "Only child", "Village - town"])
+
 # one hot encoding
-data_movie = pp.one_hot_encoding(data_movie)
+data_movie = pp.one_hot_encoding(data_movie, start_idx=13)
 print(data_movie.head(3))
+
+
 

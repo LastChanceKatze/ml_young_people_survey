@@ -41,11 +41,11 @@ def encode_labels(data):
 
 
 # one hot encoding
-def one_hot_encoding(data):
+def one_hot_encoding(data, start_idx):
     data_cp = data.copy()
     cols = data_cp.columns
 
-    for i in range(14, data_cp.shape[1]):
+    for i in range(start_idx, data_cp.shape[1]):
         df = pd.get_dummies(data=data[cols[i]], prefix=cols[i], drop_first=True)
         data_cp = data_cp.drop(cols[i], axis=1)
         data_cp = pd.concat([data_cp, df], axis=1)
