@@ -88,4 +88,4 @@ def exploratory_analysis():
     plot_barplot(data_movie, col_x="House - block of flats", col_y="Horror")
 
 
-exploratory_analysis()
+# exploratory_analysis()
