@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import StandardScaler, LabelEncoder, Normalizer
 from sklearn.impute import SimpleImputer
 
 desired_width = 500
@@ -60,4 +60,9 @@ def scale_features(x):
     return x
 
 
+# normalize features
+def normalize(x):
+    norm = Normalizer()
+    x = norm.fit_transform(x)
+    return x
 
