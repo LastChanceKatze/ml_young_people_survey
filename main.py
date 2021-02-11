@@ -35,4 +35,3 @@ data_movie = pp.one_hot_encoding(data_movie, start_idx=13)
 print(data_movie.head(3))
 
 
-
