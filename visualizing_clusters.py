@@ -4,23 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_pca(variance):
-    plt.plot(variance)
-    plt.xlabel('Number of components')
-    plt.ylabel("Variance")
-    plt.show()
-
-
-def pca_selection(n_components, data):
-    pca = PCA(n_components=n_components, random_state=200, whiten=True)
-    pca.fit_transform(data)
-
-    var_ratio = pca.explained_variance_ratio_*100
-    print("Variance ratio - PCA\n", var_ratio)
-    print("Total variance - PCA: ", np.sum(var_ratio))
-    plot_pca(variance=np.cumsum(var_ratio))
-
-
 def plot_clusters_pca_2d(n_components, data, labels, num_clusters):
     """
     Transform the data using PCA.

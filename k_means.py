@@ -1,7 +1,6 @@
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, calinski_harabasz_score
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
 import preprocess as pp
 import visualizing_clusters as vis
@@ -75,8 +74,16 @@ data_movie = pp.one_hot_encoding(data_movie, start_idx=13)
 data_cols = data_movie.columns
 data_movie_norm = pp.normalize(data_movie)
 ######################################################################
-# elbow_method(data_movie_norm, 20)
-# plot_scores(data_movie_norm, 10)
+# PCA variance selection
+# data_pca, var_ratio = pp.pca_selection(data_movie_norm.shape[1], data_movie_norm)
+# pp.plot_pca(variance=np.cumsum(var_ratio))
+
+# pca data with x components
+data_pca, var_ratio = pp.pca_selection(15, data_movie_norm)
+data_pca_norm = pp.normalize(data_pca)
+
+elbow_method(data_pca_norm, 20)
+plot_scores(data_pca_norm, 10)
 
 # use 4 clusters for analysis
 num_clusters = 3
@@ -87,9 +94,6 @@ km.fit(data_movie_norm)
 # evaluate clusters
 # silhouette score
 ev.eval_scores(data_movie_norm, km.labels_)
-
-# PCA variance
-# vis.pca_selection(data_movie_norm.shape[1], data_movie_norm)
 
 # visualize with PCA 2D
 # vis.plot_clusters_pca_2d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
