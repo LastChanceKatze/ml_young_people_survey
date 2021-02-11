@@ -79,11 +79,11 @@ data_movie_norm = pp.normalize(data_movie)
 # pp.plot_pca(variance=np.cumsum(var_ratio))
 
 # pca data with x components
-data_pca, var_ratio = pp.pca_selection(15, data_movie_norm)
-data_pca_norm = pp.normalize(data_pca)
-
-elbow_method(data_pca_norm, 20)
-plot_scores(data_pca_norm, 10)
+# data_pca, var_ratio = pp.pca_selection(15, data_movie_norm)
+# data_pca_norm = pp.normalize(data_pca)
+#
+# elbow_method(data_pca_norm, 20)
+# plot_scores(data_pca_norm, 10)
 
 # use 4 clusters for analysis
 num_clusters = 3
@@ -92,22 +92,20 @@ km = KMeans(n_clusters=num_clusters, init="k-means++",
 km.fit(data_movie_norm)
 
 # evaluate clusters
-# silhouette score
 ev.eval_scores(data_movie_norm, km.labels_)
 
 # visualize with PCA 2D
-# vis.plot_clusters_pca_2d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
-# vis.plot_clusters_pca_3d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
+vis.plot_clusters_pca_2d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
+vis.plot_clusters_pca_3d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
 
 # dataframe with predictions
-df_clusters = data_movie.copy()
-# df_clusters = pd.DataFrame(data_movie_norm, columns=data_cols)
+df_clusters = pd.DataFrame(data_movie_norm, columns=data_cols)
 df_clusters['cluster'] = km.labels_
 
 df_clusters_mean = df_clusters.groupby('cluster').mean() - data_movie.median()
 print(df_clusters_mean)
 
 # visualise cluster means
-# vis.plot_cluster_distribution(df_clusters_mean)
+vis.plot_cluster_distribution(df_clusters_mean, num_clusters)
 
-vis.plot_count_cluster(df_clusters['cluster'], data_movie['Gender_male'], col_name="Gender")
+# vis.plot_count_cluster(df_clusters['cluster'], data_movie['Gender_male'], col_name="Gender")
