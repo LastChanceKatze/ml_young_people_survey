@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import StandardScaler, LabelEncoder, Normalizer
 from sklearn.impute import SimpleImputer
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
 desired_width = 500
 pd.set_option('display.width', desired_width)
@@ -59,12 +61,34 @@ def scale_features(x):
     x = scaler.fit_transform(x)
     return x
 
+def normalize(x):
+    norm = Normalizer()
+    x = norm.fit_transform(x)
+    return x
+
+
+def plot_pca(variance):
+    plt.plot(variance)
+    plt.xlabel('Number of components')
+    plt.ylabel("Variance")
+    plt.show()
+
+
+def pca_selection(n_components, data):
+    pca = PCA(n_components=n_components, random_state=200, whiten=True)
+    data = pca.fit_transform(data)
+
+    var_ratio = pca.explained_variance_ratio_*100
+    print("Variance ratio - PCA\n", var_ratio)
+    print("Total variance - PCA: ", np.sum(var_ratio))
+
+    return data, var_ratio
+
+
 def preprocess_data(data_movie):
 
     print(data_movie.info())
 
-    # check missing vals
-    # data contains missing vals
     check_missing_vals(data_movie)
 
     # impute data
