@@ -70,8 +70,11 @@ def preprocess_data(data_movie):
     # impute data
     data_movie = impute(data_movie)
     check_missing_vals(data_movie)
-
+    
+    data_movie = data_movie.drop(columns=["Number of siblings", "Only child", "Village - town"])
+  
     # one hot encoding
-    data_movie = pp.one_hot_encoding(data_movie)
-    print(data_movie.head(3))
+    data_movie = one_hot_encoding(data_movie, start_idx=13)
 
+    print(data_movie.head(3))
+    return data_movie

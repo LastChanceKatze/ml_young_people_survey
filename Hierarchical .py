@@ -1,4 +1,4 @@
-from sklearn.cluster import DBSCAN
+from sklearn.cluster import AgglomerativeClustering
 from sklearn import datasets
 import numpy as np
 import pandas as pd
@@ -23,7 +23,7 @@ movie_columns = ["Movies", "Horror", "Thriller", "Comedy", "Romantic",
 data_movie = data[movie_columns]
 data_movie = pp.preprocess_data(data_movie)
 print(data_movie)
-clustering = DBSCAN(eps=4, min_samples=16).fit(data_movie)
+clustering = AgglomerativeClustering().fit(data_movie)
 print(clustering.labels_)
 score = silhouette_score(data_movie, clustering.labels_, metric='euclidean')
 #
