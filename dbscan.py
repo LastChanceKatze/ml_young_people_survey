@@ -21,7 +21,7 @@ movie_columns = ["Movies", "Horror", "Thriller", "Comedy", "Romantic",
                  "Only child", "Village - town", "House - block of flats"]
 
 data_movie = data[movie_columns]
-data_movie = pp.preprocess_data(data_movie)
+data_movie_norm, data_movie, data_cols = pp.preprocess_data(data_movie)
 print(data_movie)
 clustering = DBSCAN(eps=4, min_samples=16).fit(data_movie)
 print(clustering.labels_)
@@ -30,3 +30,4 @@ score = silhouette_score(data_movie, clustering.labels_, metric='euclidean')
 # Print the score
 #
 print('Silhouetter Score: %.3f' % score)
+

@@ -99,6 +99,8 @@ def preprocess_data(data_movie):
   
     # one hot encoding
     data_movie = one_hot_encoding(data_movie, start_idx=13)
-
+    data_cols = data_movie.columns
+    data_movie_norm = normalize(data_movie)
     print(data_movie.head(3))
-    return data_movie
+
+    return data_movie_norm, data_movie, data_cols
