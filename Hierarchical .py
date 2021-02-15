@@ -56,10 +56,10 @@ data_pca, var_ratio = pp.pca_selection(15, data_movie_norm)
 data_pca_norm = pp.normalize(data_pca)
 #######################################################################
 
-vis.plot_scores(data_movie_norm, 20, "agglomerative", "./graphs/agglomerative_scores.png")
+vis.plot_scores(data_movie_norm, 20, "agglomerative", "./graphs/agglomerative_scores.png", "cosine")
 
 num_clusters = 3
-alg = AgglomerativeClustering(n_clusters=num_clusters)
+alg = AgglomerativeClustering(n_clusters=num_clusters, compute_distances=True)
 alg = alg.fit(data_movie_norm)
 print(data_movie_norm)
 

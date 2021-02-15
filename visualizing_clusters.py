@@ -2,8 +2,11 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score, calinski_harabasz_score
+import pandas as pd
+import descriptive_statistics as ds
+
 
 def plot_clusters_pca_2d(n_components, data, labels, num_clusters):
     """
@@ -54,32 +57,29 @@ def plot_count_cluster(labels, data_column, col_name):
     plt.savefig(f"./graphs/k_means_count_{col_name}.png")
     plt.show()
 
-def plot_score(i, algorithm, data, sil_scores, c_h_scores, n_clusters):
-        algorithm.fit(data)
-        sil_scores.append(silhouette_score(data, algorithm.labels_, metric='cosine'))
-        c_h_scores.append(calinski_harabasz_score(data, algorithm.labels_))
-        n_clusters.append(i)
 
-        return sil_scores, c_h_scores, n_clusters
+def plot_score(algorithm, data, sil_scores, c_h_scores, nn_metric):
+    algorithm.fit(data)
+    sil_scores.append(silhouette_score(data, algorithm.labels_, metric=nn_metric))
+    c_h_scores.append(calinski_harabasz_score(data, algorithm.labels_))
 
-def plot_scores(data, num_iters, algorithm_name, figure_path):
+    return sil_scores, c_h_scores
+
+
+def plot_scores(data, num_iters, algorithm_name, figure_path, nn_metric):
     sil_scores = []
     c_h_scores = []
     n_clusters = []
     for i in range(2, num_iters):
- 
-       # algorithm
+
         if algorithm_name == "kmeans":
-
             algorithm = KMeans(n_clusters=i, init="k-means++",
-                    max_iter=3000, random_state=0)
+                               max_iter=3000, random_state=0)
+        elif algorithm_name == "agglomerative":
+            algorithm = AgglomerativeClustering(n_clusters=i)
 
-        else:
-            if algorithm_name == "agglomerative":
-
-                 algorithm = AgglomerativeClustering(n_clusters=i)
-
-        sil_scores, c_h_scores, n_clusters = plot_score(i, algorithm, data, sil_scores, c_h_scores, n_clusters)
+        sil_scores, c_h_scores = plot_score(algorithm, data, sil_scores, c_h_scores, nn_metric)
+        n_clusters.append(i)
 
     fig, axs = plt.subplots(1, 2)
 
@@ -93,3 +93,12 @@ def plot_scores(data, num_iters, algorithm_name, figure_path):
 
     plt.savefig(figure_path)
     plt.show()
+
+
+def plot_count_clusters(data, labels):
+    df_group = data.groupby(labels)
+    cl_0 = df_group.get_group(2)
+    print(cl_0.head(2))
+    ds.plot_countplots(cl_0)
+
+
