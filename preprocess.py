@@ -61,8 +61,6 @@ def scale_features(x):
     x = scaler.fit_transform(x)
     return x
 
-
-# normalize features
 def normalize(x):
     norm = Normalizer()
     x = norm.fit_transform(x)
@@ -86,3 +84,27 @@ def pca_selection(n_components, data):
 
     return data, var_ratio
 
+
+def preprocess_data(data_movie):
+
+    print(data_movie.info())
+
+    check_missing_vals(data_movie)
+
+    # impute data
+    data_movie = impute(data_movie)
+    check_missing_vals(data_movie)
+    
+    data_movie = data_movie.drop(columns=["Number of siblings", "Only child", "Village - town"])
+  
+    # one hot encoding
+    data_movie = one_hot_encoding(data_movie, start_idx=13)
+    
+    data_cols = data_movie.columns
+
+    data_movie_norm = normalize(data_movie)
+   # data_movie_norm = scale_features(data_movie)
+
+   # data_movie_norm = data_movie
+
+    return data_movie_norm, data_movie, data_cols

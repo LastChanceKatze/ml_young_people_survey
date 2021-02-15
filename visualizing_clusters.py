@@ -2,7 +2,8 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.metrics import silhouette_score, calinski_harabasz_score
 
 def plot_clusters_pca_2d(n_components, data, labels, num_clusters):
     """
@@ -51,4 +52,44 @@ def plot_count_cluster(labels, data_column, col_name):
     plt.subplots(figsize=(15, 5))
     sns.countplot(x=labels, hue=data_column)
     plt.savefig(f"./graphs/k_means_count_{col_name}.png")
+    plt.show()
+
+def plot_score(i, algorithm, data, sil_scores, c_h_scores, n_clusters):
+        algorithm.fit(data)
+        sil_scores.append(silhouette_score(data, algorithm.labels_, metric='cosine'))
+        c_h_scores.append(calinski_harabasz_score(data, algorithm.labels_))
+        n_clusters.append(i)
+
+        return sil_scores, c_h_scores, n_clusters
+
+def plot_scores(data, num_iters, algorithm_name, figure_path):
+    sil_scores = []
+    c_h_scores = []
+    n_clusters = []
+    for i in range(2, num_iters):
+ 
+       # algorithm
+        if algorithm_name == "kmeans":
+
+            algorithm = KMeans(n_clusters=i, init="k-means++",
+                    max_iter=3000, random_state=0)
+
+        else:
+            if algorithm_name == "agglomerative":
+
+                 algorithm = AgglomerativeClustering(n_clusters=i)
+
+        sil_scores, c_h_scores, n_clusters = plot_score(i, algorithm, data, sil_scores, c_h_scores, n_clusters)
+
+    fig, axs = plt.subplots(1, 2)
+
+    axs[0].plot(n_clusters, sil_scores)
+    axs[0].set(xlabel="No. clusters", ylabel="Silhouette score",
+               xticks=n_clusters)
+
+    axs[1].plot(n_clusters, c_h_scores)
+    axs[1].set(xlabel="No. clusters", ylabel="Calinski Harabasz score",
+               xticks=n_clusters)
+
+    plt.savefig(figure_path)
     plt.show()
