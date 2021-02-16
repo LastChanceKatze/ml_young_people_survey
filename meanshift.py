@@ -36,9 +36,8 @@ data_pca_norm = pp.normalize(data_pca)
 """
 #vis.plot_scores(data_movie_norm, 20, "meanshift", "./graphs/meanshift_scores.png")
 
-bandwidth = estimate_bandwidth(data_movie_norm, quantile=0.04, n_samples=100)
-print(bandwidth)
-num_clusters = 3
+bandwidth = estimate_bandwidth(data_movie_norm, quantile=0.1)
+
 alg =  MeanShift(bandwidth=bandwidth, bin_seeding=True)
 alg = alg.fit(data_movie_norm)
 
@@ -55,8 +54,8 @@ print("number of estimated clusters : %d" % n_clusters_)
 ev.eval_scores(data_movie_norm, alg.labels_)
 
 # visualize with PCA 2D
-vis.plot_clusters_pca_2d(3, data_movie_norm, alg.labels_, num_clusters=num_clusters)
-vis.plot_clusters_pca_3d(3, data_movie_norm, alg.labels_, num_clusters=num_clusters)
+vis.plot_clusters_pca_2d(3, data_movie_norm, alg.labels_, num_clusters=n_clusters_)
+vis.plot_clusters_pca_3d(3, data_movie_norm, alg.labels_, num_clusters=n_clusters_)
 
 # dataframe with predictions
 #df_clusters = pd.DataFrame(data_movie_norm, columns=data_cols)
