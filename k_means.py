@@ -5,7 +5,8 @@ import pandas as pd
 import preprocess as pp
 import visualizing_clusters as vis
 import evaluate as ev
-
+from scipy.spatial import distance
+import numpy as np
 
 def elbow_method(data, num_iters):
     scores = []
@@ -24,6 +25,21 @@ def elbow_method(data, num_iters):
     plt.ylabel("Inertia")
     plt.savefig("./graphs/elbow_method_cosine.png")
     plt.show()
+
+
+def detect_outliers(data, labels, centers, min_distance):
+    outlier_inds = []
+
+    for index, row in data.iterrows():
+        label = labels[index]
+        center = centers[label]
+
+        dist = distance.euclidean(row.values, center)
+
+        if dist < min_distance:
+            outlier_inds.append(index)
+
+    return outlier_inds
 
 
 def plot_scores(data, num_iters):
@@ -94,9 +110,21 @@ km.fit(data_movie_norm)
 # evaluate clusters
 ev.eval_scores(data_movie_norm, km.labels_)
 
+# outliers
+df = pd.DataFrame(data_movie_norm)
+outliers = detect_outliers(df, km.labels_, km.cluster_centers_, 0.1)
+
+print(data_movie.iloc[outliers, :])
+
+df = df.drop(outliers, axis=0)
+labels = np.delete(km.labels_, outliers)
+
+vis.plot_clusters_pca_3d(3, df.values, labels, num_clusters=num_clusters)
+######################################################################################
+
 # # visualize with PCA 2D
 # vis.plot_clusters_pca_2d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
-# vis.plot_clusters_pca_3d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
+vis.plot_clusters_pca_3d(3, data_movie_norm, km.labels_, num_clusters=num_clusters)
 #
 # # dataframe with predictions
 # df_clusters = pd.DataFrame(data_movie_norm, columns=data_cols)
