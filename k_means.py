@@ -27,7 +27,7 @@ def elbow_method(data, num_iters):
     plt.show()
 
 
-def detect_outliers(data, labels, centers, min_distance):
+def detect_outliers(data, labels, centers, max_distance):
     outlier_inds = []
 
     for index, row in data.iterrows():
@@ -36,7 +36,7 @@ def detect_outliers(data, labels, centers, min_distance):
 
         dist = distance.euclidean(row.values, center)
 
-        if dist < min_distance:
+        if dist > max_distance:
             outlier_inds.append(index)
 
     return outlier_inds
@@ -112,7 +112,7 @@ ev.eval_scores(data_movie_norm, km.labels_)
 
 # outliers
 df = pd.DataFrame(data_movie_norm)
-outliers = detect_outliers(df, km.labels_, km.cluster_centers_, 0.1)
+outliers = detect_outliers(df, km.labels_, km.cluster_centers_, 0.25)
 
 print(data_movie.iloc[outliers, :])
 

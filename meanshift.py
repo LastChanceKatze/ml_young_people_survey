@@ -9,6 +9,20 @@ from sklearn.cluster import AgglomerativeClustering
 import numpy as np
 from sklearn.cluster import MeanShift, estimate_bandwidth
 
+
+def ms_detect_outliers(labels, labels_unique, labels_count, min_points):
+    outlier_labels = []
+    for label, label_count in zip(labels_unique, labels_count):
+        if label_count < min_points:
+            outlier_labels.append(label)
+
+    outlier_inx = []
+    for i in range(len(labels)):
+        if labels[i] in outlier_labels:
+            outlier_inx.append(i)
+
+    return outlier_inx
+
 # load data
 data = pd.read_csv("dataset/responses.csv")
 
